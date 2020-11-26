@@ -1,16 +1,18 @@
 const db = require('../models');
+
 const Employee = db.employees;
 
 exports.create = (req, res) => {
 
+    const { name, code, profession, color, city, branch, assigned } = req.body;
     const employee = {
-        name: req.body.name,
-        code: req.body.code,
-        profession: req.body.profession,
-        color: req.body.color,
-        city: req.body.city,
-        branch: req.body.branch,
-        assigned: req.body.assigned ? req.body.assigned : false
+        name,
+        code,
+        profession,
+        color,
+        city,
+        branch,
+        assigned: assigned ? assigned : false
     }
 
     Employee.create(employee)
@@ -77,13 +79,13 @@ exports.delete = (req, res) => {
                 });
             } else {
                 res.send({
-                    message:  `Cannot delete Employee with id=${id}`
+                    message: `Cannot delete Employee with id=${id}`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Employee with id="+ id
+                message: "Could not delete Employee with id=" + id
             })
         })
 };

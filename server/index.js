@@ -1,8 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require("body-parser")
-//const employees = require('./data/employees.json')
-
 
 const app = express()
 
@@ -13,16 +11,14 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
 app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./models");
 db.sequelize.sync();
 
-app.get('/', (req, res, next) => {
+app.get('/test', (req, res, next) => {
   res.json({ message: "Hello from express" });
 })
 
