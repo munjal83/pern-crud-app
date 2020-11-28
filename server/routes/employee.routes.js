@@ -1,9 +1,11 @@
 module.exports = app => {
     const employees = require('../controllers/employee.controller')
 
-    var router = require('express').Router();
+    const router = require('express').Router();
 
     router.post("/", employees.create);
+
+    router.get("/:id", employees.findOne);
 
     router.get("/", employees.findAll);
 
