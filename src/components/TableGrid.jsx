@@ -4,57 +4,42 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 
 import EmployeeTable from './EmployeeTable';
-import UpdateEmployeeForm from './UpdateEmployeeForm';
 import EmployeeDataService from '../services/EmployeeService';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 
+const initialEmployee = {
+  name: '',
+  code: '',
+  color: '',
+  profession: '',
+  city: '',
+  branch: '',
+  assigned: true,
+};
+
 const TableGrid = () => {
   const [employees, setEmployees] = useState([]);
-  const [currentEmployee, setCurrentEmployee] = useState([]);
+  const [employee, setEmployee] = useState(initialEmployee);
   const [open, setOpen] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    EmployeeDataService.getAll()
-      .then((response) => {
-        setEmployees(response.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, [currentEmployee]);
+    getAllEmployees();
+  }, [employee]);
 
-  const deleteEmployee = (id) => {
-    EmployeeDataService.remove(id)
-      .then((response) => {
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  const getAllEmployees = async () => {
+    try {
+      const response = await EmployeeDataService.getAll();
+      setEmployees(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const fetchEmployee = (id) => {
-    EmployeeDataService.get(id)
-      .then((response) => {
-        setCurrentEmployee(response.data);
-        setOpen(true);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  const addEmployee = async () => {
+    const { name, code, color, profession, city, branch, assigned } = employee;
 
-  const updateEmployee = (id) => {
-    const {
-      name,
-      code,
-      color,
-      profession,
-      city,
-      branch,
-      assigned,
-    } = currentEmployee;
-    
     const data = {
       name,
       code,
@@ -64,22 +49,64 @@ const TableGrid = () => {
       branch,
       assigned,
     };
-
-    EmployeeDataService.update(id, data)
-      .then((response) => {
-        setCurrentEmployee({
-          name: response.data.name,
-          code: response.data.code,
-          color: response.data.color,
-          profession: response.data.profession,
-          city: response.data.city,
-          branch: response.data.branch,
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    try {
+      const response = await EmployeeDataService.create(data);
+      console.log(response);
+      setEmployee(initialEmployee);
+    } catch (error) {
+      console.log(error);
+    }
     setOpen(false);
+  };
+
+  const deleteEmployee = async (id) => {
+    try {
+      const response = await EmployeeDataService.remove(id);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchEmployee = async (id) => {
+    try {
+      const response = await EmployeeDataService.get(id);
+      console.log(response.data);
+      setEmployee(response.data);
+      setOpen(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const updateEmployee = async (id) => {
+    const { name, code, color, profession, city, branch, assigned } = employee;
+
+    const data = {
+      name,
+      code,
+      color,
+      profession,
+      city,
+      branch,
+      assigned,
+    };
+    try {
+      const response = await EmployeeDataService.update(id, data);
+      setOpen(false);
+      setEmployee({
+        name: response.data.name,
+        code: response.data.code,
+        color: response.data.color,
+        branch: response.data.branch,
+        city: response.data.city,
+        profession: response.data.profession,
+        assigned: response.data.assigned,
+      });
+      setUpdating(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const columns = React.useMemo(
@@ -155,6 +182,7 @@ const TableGrid = () => {
               const employeesCopy = [...employees];
               const toBeFetched = employeesCopy.splice(tableProps.row.index, 1);
               fetchEmployee(toBeFetched[0]['id']);
+              setUpdating(true);
             }}
           >
             <EditIcon color='primary' />
@@ -168,17 +196,18 @@ const TableGrid = () => {
   return (
     <div style={{ padding: 50 }}>
       <CssBaseline />
-      <UpdateEmployeeForm
-        open={open}
-        currentEmployee={currentEmployee}
-        setOpen={setOpen}
-        setCurrentEmployee={setCurrentEmployee}
-        updateEmployee={updateEmployee}
-      />
       <EmployeeTable
         columns={columns}
         data={employees}
-        setEmployees={setEmployees}
+        open={open}
+        employee={employee}
+        updating={updating}
+        setEmployee={setEmployee}
+        getAllEmployees={getAllEmployees}
+        addEmployee={addEmployee}
+        setOpen={setOpen}
+        updateEmployee={updateEmployee}
+        setUpdating={setUpdating}
       />
     </div>
   );

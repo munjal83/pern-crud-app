@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import MaUTable from '@material-ui/core/Table';
 import PropTypes from 'prop-types';
@@ -11,32 +11,23 @@ import Button from '@material-ui/core/Button';
 import { useTable } from 'react-table';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
-import AddEmployeeForm from './AddEmployeeForm';
+import EmployeeForm from './EmployeeForm';
 
-import EmployeeDataService from '../services/EmployeeService';
-
-const initialEmployee = {
-  name: '',
-  code: '',
-  color: '',
-  profession: '',
-  city: '',
-  branch: '',
-  assigned: true,
-};
-
-const EmployeeTable = ({ columns, data, setEmployees }) => {
-  const [employee, setEmployee] = useState(initialEmployee);
-  const [open, setOpen] = useState(false);
-
+const EmployeeTable = ({
+  columns,
+  data,
+  getAllEmployees,
+  employee,
+  addEmployee,
+  setEmployee,
+  open,
+  setOpen,
+  updateEmployee,
+  updating,
+  setUpdating,
+}) => {
   useEffect(() => {
-    EmployeeDataService.getAll()
-      .then((response) => {
-        setEmployees(response.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    getAllEmployees();
   }, [employee]);
 
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
@@ -46,36 +37,6 @@ const EmployeeTable = ({ columns, data, setEmployees }) => {
 
   const handleClickOpen = () => {
     setOpen(true);
-  };
-
-  const addEmployee = () => {
-    const { name, code, color, profession, city, branch, assigned } = employee;
-
-    const data = {
-      name,
-      code,
-      color,
-      profession,
-      city,
-      branch,
-      assigned,
-    };
-
-    EmployeeDataService.create(data)
-      .then((response) => {
-        setEmployee({
-          name: response.data.name,
-          code: response.data.code,
-          color: response.data.color,
-          profession: response.data.profession,
-          city: response.data.city,
-          branch: response.data.branch,
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    setOpen(false);
   };
 
   return (
@@ -88,12 +49,15 @@ const EmployeeTable = ({ columns, data, setEmployees }) => {
       >
         Add New Employee
       </Button>
-      <AddEmployeeForm
+      <EmployeeForm
         open={open}
         employee={employee}
         setOpen={setOpen}
         setEmployee={setEmployee}
         addEmployee={addEmployee}
+        updateEmployee={updateEmployee}
+        updating={updating}
+        setUpdating={setUpdating}
       />
       <MaUTable {...getTableProps()}>
         <TableHead>
@@ -131,7 +95,6 @@ const EmployeeTable = ({ columns, data, setEmployees }) => {
 EmployeeTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  setData: PropTypes.func.isRequired,
 };
 
 export default EmployeeTable;

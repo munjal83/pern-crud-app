@@ -16,7 +16,7 @@
     "pg-hstore": "^2.3.3",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "^4.0.1",
     "react-table": "^7.6.2",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0"
@@ -29,5 +29,17 @@
     "eject": "react-scripts eject",
     "custom:build": "nodemon src/scripts/build.js --watch src/data --ext .md",
     "custom:start": "concurrently --kill-others \"npm run custom:build\" \"npm run start\""
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

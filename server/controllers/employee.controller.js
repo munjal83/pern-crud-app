@@ -2,7 +2,7 @@ const db = require('../models');
 
 const Employee = db.employees;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
     const { name, code, profession, color, city, branch, assigned } = req.body;
     const employee = {
@@ -15,44 +15,41 @@ exports.create = (req, res) => {
         assigned: assigned ? assigned : false
     }
 
-    Employee.create(employee)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occured while creating an Employee"
-            });
+    const data = await Employee.create(employee)
+    try {
+        res.send(data);
+    } catch (err) {
+        res.status(500).send({
+            message:
+                err.message || "Some error occured while creating an Employee"
         });
+    };
 };
 
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
 
-    Employee.findAll()
-        .then(data => {
-            res.send(data);
+    const data = await Employee.findAll()
+    try {
+        res.send(data);
+    } catch (err) {
+        res.status(500).send({
+            message:
+                err.message || "Some error occured while fetching employees"
         })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occured while fetching employees"
-            })
-        })
+    }
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
     const id = req.params.id;
 
-    Employee.findByPk(id)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving Employee with id=" + id
-            });
+    const data = await Employee.findByPk(id)
+    try {
+        res.send(data);
+    } catch (err) {
+        res.status(500).send({
+            message: "Error retrieving Employee with id=" + id
         });
+    };
 };
 
 exports.update = (req, res) => {
@@ -77,17 +74,17 @@ exports.update = (req, res) => {
                 message: "Error updating Employee with id=" + id
             })
         })
-
 };
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
     const id = req.params.id;
 
-    Employee.destroy({
+    await Employee.destroy({
         where: { id: id }
     })
-        .then(num => {
-            if (num == 1) {
+    try {
+        data => {
+            if (data == 1) {
                 res.send({
                     message: "Employee was deleted successfully!"
                 });
@@ -96,10 +93,10 @@ exports.delete = (req, res) => {
                     message: `Cannot delete Employee with id=${id}`
                 });
             }
+        }
+    } catch (err) {
+        res.status(500).send({
+            message: "Could not delete Employee with id=" + id
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete Employee with id=" + id
-            })
-        })
+    }
 };
