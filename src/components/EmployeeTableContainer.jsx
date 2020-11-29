@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ClearIcon from '@material-ui/icons/Clear';
 import EditIcon from '@material-ui/icons/Edit';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import EventBusyIcon from '@material-ui/icons/EventBusy';
 
 import EmployeeTable from './EmployeeTable';
 import EmployeeDataService from '../services/EmployeeService';
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
 
 const initialEmployee = {
   name: '',
@@ -27,14 +27,12 @@ const TableGrid = () => {
   const setStyle = (color) => {
     return {
       backgroundColor: color,
-      width: '15px',
-      height: '15px',
+      width: '20px',
+      height: '20px',
+      paddingLeft: '6px',
+      color: 'whitesmoke'
     };
   };
-
-  useEffect(() => {
-    getAllEmployees();
-  }, [employee]);
 
   const getAllEmployees = async () => {
     try {
@@ -120,31 +118,28 @@ const TableGrid = () => {
   const sliceEmployeeRecord = (props) => {
     const employeesCopy = [...employees];
     const sliceRecord = employeesCopy.splice(props.row.index, 1);
-    return sliceRecord
-  }
+    return sliceRecord;
+  };
 
   const columns = useMemo(
     () => [
       {
         Header: 'ID',
         accessor: 'id',
+        Cell: (props) => {
+          const sliceRecord = sliceEmployeeRecord(props);
+          const color = sliceRecord[0].color;
+        return <div style={setStyle(color)}>{sliceRecord[0].id}</div>;
+        },
       },
       {
         Header: 'Name',
         accessor: 'name',
+        
       },
       {
         Header: 'Code',
         accessor: 'code',
-      },
-      {
-        Header: 'Color',
-        accessor: 'color',
-        Cell: (props) => {
-          const sliceRecord = sliceEmployeeRecord(props)
-          const color = sliceRecord[0].color
-            return <div style={setStyle(color)}></div>
-        },
       },
       {
         Header: 'Profession',
@@ -162,9 +157,9 @@ const TableGrid = () => {
         Header: 'Assigned',
         accessor: (d) => {
           return d.assigned ? (
-            <CheckIcon color='primary' />
+            <EventAvailableIcon />
           ) : (
-            <ClearIcon color='secondary' />
+            <EventBusyIcon />
           );
         },
       },
@@ -184,7 +179,7 @@ const TableGrid = () => {
               setEmployees(employeesCopy);
             }}
           >
-            <DeleteForeverIcon color='secondary' />
+            <ClearIcon color='secondary' />
           </span>
         ),
       },
@@ -198,7 +193,7 @@ const TableGrid = () => {
               cursor: 'pointer',
             }}
             onClick={() => {
-              const sliceRecord = sliceEmployeeRecord(props)
+              const sliceRecord = sliceEmployeeRecord(props);
               fetchEmployee(sliceRecord[0]['id']);
               setUpdating(true);
             }}

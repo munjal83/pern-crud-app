@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import TableGrid from './components/TableGrid'
+import EmployeeTableContainer from './components/EmployeeTableContainer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +28,7 @@ const App = () => {
     <div className="App">
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" disabled>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
@@ -36,7 +36,7 @@ const App = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <TableGrid />
+      <EmployeeTableContainer />
     </div>
   );
 }

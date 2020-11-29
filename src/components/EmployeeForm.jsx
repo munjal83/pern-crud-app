@@ -60,16 +60,16 @@ const EmployeeForm = ({
             Add/Update record to employee table
           </DialogContentText>
           <InputLabel>Color</InputLabel>
-          <Select value={employee.color} onChange={handleChange('color')}>
+          <Select value={employee.color || ''} onChange={handleChange('color')}>
             <MenuItem value={''}>
               <em>None</em>
             </MenuItem>
-            <MenuItem value={'Yellow'}>Yellow</MenuItem>
-            <MenuItem value={'Blue'}>Blue</MenuItem>
-            <MenuItem value={'Green'}>Green</MenuItem>
-            <MenuItem value={'Red'}>Red</MenuItem>
-            <MenuItem value={'Red'}>Orange</MenuItem>
-            <MenuItem value={'Red'}>Black</MenuItem>
+            <MenuItem value={'yellow' || '#FFFF00'}>Yellow</MenuItem>
+            <MenuItem value={'blue' || '##000080'}>Blue</MenuItem>
+            <MenuItem value={'green' || '#008000'}>Green</MenuItem>
+            <MenuItem value={'red' || '#FF0000'}>Red</MenuItem>
+            <MenuItem value={'orange' || '#FF6600'}>Orange</MenuItem>
+            <MenuItem value={'#333333'}>Gray</MenuItem>
           </Select>
           <TextField
             autoFocus
@@ -77,7 +77,7 @@ const EmployeeForm = ({
             label='Name'
             type='text'
             fullWidth
-            value={employee.name}
+            defaultValue={employee.name}
             onChange={handleChange('name')}
           />
           <TextField
@@ -85,7 +85,7 @@ const EmployeeForm = ({
             label='Code'
             type='text'
             fullWidth
-            value={employee.code}
+            defaultValue={employee.code}
             onChange={handleChange('code')}
           />
           <TextField
@@ -93,7 +93,7 @@ const EmployeeForm = ({
             label='City'
             type='text'
             fullWidth
-            value={employee.city}
+            defaultValue={employee.city}
             onChange={handleChange('city')}
           />
           <TextField
@@ -101,7 +101,7 @@ const EmployeeForm = ({
             label='Profession'
             type='text'
             fullWidth
-            value={employee.profession}
+            defaultValue={employee.profession}
             onChange={handleChange('profession')}
           />
           <TextField
@@ -109,14 +109,14 @@ const EmployeeForm = ({
             label='Branch'
             type='text'
             fullWidth
-            value={employee.branch}
+            defaultValue={employee.branch}
             onChange={handleChange('branch')}
           />
           <FormControlLabel
             control={
               <Checkbox
-                checked={employee.assigned}
-                value={employee.assigned}
+                checked={employee.assigned ? employee.assigned : false}
+                value={employee.assigned || false}
                 onChange={handleCheck}
               />
             }

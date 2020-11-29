@@ -26,6 +26,7 @@ const EmployeeTable = ({
   updating,
   setUpdating,
 }) => {
+  
   useEffect(() => {
     getAllEmployees();
   }, [employee]);
