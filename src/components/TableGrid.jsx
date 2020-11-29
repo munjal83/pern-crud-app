@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
@@ -23,6 +23,14 @@ const TableGrid = () => {
   const [employee, setEmployee] = useState(initialEmployee);
   const [open, setOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+
+  const setStyle = (color) => {
+    return {
+      backgroundColor: color,
+      width: '15px',
+      height: '15px',
+    };
+  };
 
   useEffect(() => {
     getAllEmployees();
@@ -109,7 +117,13 @@ const TableGrid = () => {
     }
   };
 
-  const columns = React.useMemo(
+  const sliceEmployeeRecord = (props) => {
+    const employeesCopy = [...employees];
+    const sliceRecord = employeesCopy.splice(props.row.index, 1);
+    return sliceRecord
+  }
+
+  const columns = useMemo(
     () => [
       {
         Header: 'ID',
@@ -126,6 +140,11 @@ const TableGrid = () => {
       {
         Header: 'Color',
         accessor: 'color',
+        Cell: (props) => {
+          const sliceRecord = sliceEmployeeRecord(props)
+          const color = sliceRecord[0].color
+            return <div style={setStyle(color)}></div>
+        },
       },
       {
         Header: 'Profession',
@@ -153,14 +172,14 @@ const TableGrid = () => {
         Header: 'Delete',
         accessor: 'delete',
 
-        Cell: (tableProps) => (
+        Cell: (props) => (
           <span
             style={{
               cursor: 'pointer',
             }}
             onClick={() => {
               const employeesCopy = [...employees];
-              const toBeRemoved = employeesCopy.splice(tableProps.row.index, 1);
+              const toBeRemoved = employeesCopy.splice(props.row.index, 1);
               deleteEmployee(toBeRemoved[0]['id']);
               setEmployees(employeesCopy);
             }}
@@ -173,15 +192,14 @@ const TableGrid = () => {
         Header: 'Edit',
         accessor: 'edit',
 
-        Cell: (tableProps) => (
+        Cell: (props) => (
           <span
             style={{
               cursor: 'pointer',
             }}
             onClick={() => {
-              const employeesCopy = [...employees];
-              const toBeFetched = employeesCopy.splice(tableProps.row.index, 1);
-              fetchEmployee(toBeFetched[0]['id']);
+              const sliceRecord = sliceEmployeeRecord(props)
+              fetchEmployee(sliceRecord[0]['id']);
               setUpdating(true);
             }}
           >

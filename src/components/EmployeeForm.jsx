@@ -68,6 +68,8 @@ const EmployeeForm = ({
             <MenuItem value={'Blue'}>Blue</MenuItem>
             <MenuItem value={'Green'}>Green</MenuItem>
             <MenuItem value={'Red'}>Red</MenuItem>
+            <MenuItem value={'Red'}>Orange</MenuItem>
+            <MenuItem value={'Red'}>Black</MenuItem>
           </Select>
           <TextField
             autoFocus
