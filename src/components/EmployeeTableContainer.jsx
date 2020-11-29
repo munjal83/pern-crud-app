@@ -27,10 +27,12 @@ const TableGrid = () => {
   const setStyle = (color) => {
     return {
       backgroundColor: color,
-      width: '20px',
-      height: '20px',
-      paddingLeft: '6px',
-      color: 'whitesmoke'
+      width: '30px',
+      height: '30px',
+      paddingTop: '5px',
+      textAlign: 'center',
+      color: 'whitesmoke',
+      borderRadius: '50%'
     };
   };
 
